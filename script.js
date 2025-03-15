@@ -39,32 +39,44 @@ const validateYear = year => year >= 1900 && year <= currentYear;
 const isDateValid = (day, month, year) => {
   let isValid = true;
 
+  const today = new Date();
+  const birthDate = new Date(year, month - 1, day);
+
+  [yearInput, monthInput, dayInput].forEach(input =>
+    input.classList.remove('card__input--error'),
+  );
+
+  if (birthDate > today) {
+    if (year > today.getFullYear()) {
+      yearInput.classList.add('card__input--error');
+    } else if (month > today.getMonth() + 1) {
+      monthInput.classList.add('card__input--error');
+    } else {
+      dayInput.classList.add('card__input--error');
+    }
+    isValid = false;
+  }
+
   if (!validateDay(day, month, year)) {
     dayInput.classList.add('card__input--error');
     isValid = false;
-  } else {
-    dayInput.classList.remove('card__input--error');
   }
 
   if (!validateMonth(month)) {
     monthInput.classList.add('card__input--error');
     isValid = false;
-  } else {
-    monthInput.classList.remove('card__input--error');
   }
 
   if (!validateYear(year)) {
     yearInput.classList.add('card__input--error');
     isValid = false;
-  } else {
-    yearInput.classList.remove('card__input--error');
   }
   return isValid;
 };
 
 const calculateAge = (year, month, day) => {
   const today = new Date();
-  const birthDate = new Date(`${year}-${month}-${day}`);
+  const birthDate = new Date(year, month - 1, day);
   let age = today.getFullYear() - birthDate.getFullYear();
   const monthDiff = today.getMonth() - birthDate.getMonth();
   const dayDiff = today.getDate() - birthDate.getDate();
